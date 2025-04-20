@@ -265,14 +265,14 @@ const handleResumeUpload = async (data) => {
             </div>
           </div>
           <p className="text-center text-gray-600 mb-4">
-            Your profile is complete and ready to be viewed by recruiters. We'll notify you when 
+            Your profile is complete and ready to be viewed by recruiters. We&apos;ll notify you when 
             a recruiter shows interest in your profile.
           </p>
           <div className="bg-blue-50 p-4 rounded-lg">
             <h3 className="font-semibold text-blue-800 mb-2">What happens next?</h3>
             <ul className="list-disc list-inside text-blue-700">
               <li>Recruiters will be able to view your profile</li>
-              <li>You'll receive notifications when your profile is viewed</li>
+              <li>You&apos;ll receive notifications when your profile is viewed</li>
               <li>You can update your profile at any time</li>
             </ul>
           </div>
