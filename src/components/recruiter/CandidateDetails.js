@@ -286,7 +286,7 @@ export default function CandidateDetails({ candidateId, recruiterId }) {
             
             {candidate.resume_url ? (
               <div className="bg-gray-50 p-4 rounded-lg">
-                <p className="mb-4">View or download the candidate's original resume document:</p>
+                <p className="mb-4">View or download the candidate&apos;s original resume document:</p>
                 <div className="flex space-x-4">
                   <a 
                     href={candidate.resume_url} 
