@@ -1,0 +1,24 @@
+---
+description: 
+globs: 
+alwaysApply: false
+---
+I am building a "AI Talent Match MVP" it will be ai powered but for now we are going to simulate the AI component
+
+### Overview
+
+It is ai powered talent matching app. The MVP will feature two user flows one as a the candidate and one as the recruiter two seperate dashboards. The candidate user flow is first resume parsing, which will take the keywords of a resume. With the keywords there will be an ai interview chat it will ask questions on experience based on the keywords of the resume. After the chat the ai will rank the user based on some metrics still to be decided. 
+For recruiter use we have access to all the users and their ranks once its set up, we also can show each profile of the candidate and view the results of the resume parsing and ai interview.
+
+### UI Description
+
+Here is a hierachical, indented bullet description of the MVP, focusing on its functionality candidate use and recruiter use
+
+Candidate Resume upload
+Candidate AI chat Interview
+Candidate Success Page
+
+Recruiter Views Candidates
+Recruiter View Resume
+Recruiter View AI Interview
+Recruiter Leaves Feedback
