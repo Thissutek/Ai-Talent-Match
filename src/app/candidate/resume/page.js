@@ -223,43 +223,36 @@ export default function CandidateResumePage() {
   }
 
   return (
-    <div className="min-h-screen bg-gray-100">
+    <div className="min-h-screen bg-black">
       {/* Header */}
-      <header className="bg-white shadow">
+      <header className="shadow">
         <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 py-4 flex justify-between items-center">
           <div className="flex items-center">
             <Link
               href="/candidate/dashboard"
-              className="flex items-center text-gray-700 hover:text-blue-600"
+              className="flex items-center text-white hover:text-[#00ff9d]"
             >
               <FiArrowLeft className="mr-2" />
               <span>Back to Dashboard</span>
             </Link>
           </div>
-          <button
-            onClick={handleSignOut}
-            className="flex items-center px-3 py-2 border border-gray-300 rounded-md text-gray-700 hover:bg-gray-50"
-          >
-            <FiLogOut className="mr-2" />
-            <span>Sign Out</span>
-          </button>
         </div>
       </header>
 
       <main className="max-w-7xl mx-auto py-6 sm:px-6 lg:px-8">
         <div className="px-4 sm:px-0">
-          <h1 className="text-2xl font-semibold text-gray-900">
+          <h1 className="text-2xl font-semibold text-gray-200">
             Resume Management
           </h1>
-          <p className="mt-1 text-sm text-gray-600">
+          <p className="mt-1 text-sm text-gray-300">
             Upload, update, or delete your resume
           </p>
         </div>
 
         <div className="mt-6 px-4 sm:px-0">
-          <div className="bg-white rounded-lg shadow-md overflow-hidden">
-            <div className="px-6 py-5 bg-gray-50 border-b border-gray-200">
-              <h2 className="text-lg font-medium text-gray-900">Your Resume</h2>
+          <div className="bg-white/10 rounded-lg shadow-md overflow-hidden">
+            <div className="px-6 py-5 bg-white/10 ">
+              <h2 className="text-lg font-medium text-gray-200">Your Resume</h2>
             </div>
 
             <div className="px-6 py-5">
@@ -290,14 +283,14 @@ export default function CandidateResumePage() {
                   </div>
 
                   <div className="mt-8 border-t border-gray-200 pt-6">
-                    <h3 className="text-base font-medium text-gray-900 mb-4">
+                    <h3 className="text-base font-medium text-gray-200 mb-4">
                       Upload a new version
                     </h3>
                     <form onSubmit={handleUpload}>
                       <div className="mb-4">
                         <label
                           htmlFor="resume-upload"
-                          className="block text-sm font-medium text-gray-700 mb-2"
+                          className="block text-sm font-medium text-gray-200 mb-2"
                         >
                           Resume (PDF format, max 5MB)
                         </label>
@@ -345,7 +338,7 @@ export default function CandidateResumePage() {
                       <button
                         type="submit"
                         disabled={!file || isUploading}
-                        className="inline-flex justify-center items-center px-4 py-2 border border-transparent text-sm font-medium rounded-md shadow-sm text-white bg-blue-600 hover:bg-blue-700 focus:outline-none focus:ring-2 focus:ring-offset-2 focus:ring-blue-500 disabled:opacity-50 disabled:cursor-not-allowed"
+                        className="inline-flex justify-center items-center px-4 py-2 border text-sm font-medium rounded-md shadow-sm primary-button primary-button:hover focus:outline-none focus:ring-2 focus:ring-offset-2 focus:ring-blue-500 disabled:opacity-50 disabled:cursor-not-allowed"
                       >
                         {isUploading ? (
                           <>
@@ -443,9 +436,9 @@ export default function CandidateResumePage() {
 
           {/* Parsed Resume Data */}
           {resumeData && (
-            <div className="mt-6 bg-white rounded-lg shadow-md overflow-hidden">
-              <div className="px-6 py-5 bg-gray-50 border-b border-gray-200">
-                <h2 className="text-lg font-medium text-gray-900">
+            <div className="mt-6 bg-white/10 rounded-lg shadow-md overflow-hidden">
+              <div className="px-6 py-5 bg-white/10">
+                <h2 className="text-lg font-medium text-gray-200">
                   Parsed Resume Data
                 </h2>
               </div>
@@ -453,26 +446,26 @@ export default function CandidateResumePage() {
               <div className="px-6 py-5">
                 {/* Contact Information */}
                 <div className="mb-6">
-                  <h3 className="text-sm font-medium text-gray-900 mb-3">
+                  <h3 className="text-sm font-medium text-gray-200 mb-3">
                     Contact Information
                   </h3>
-                  <div className="bg-gray-50 p-4 rounded-md">
+                  <div className="bg-white/10 p-4 rounded-md">
                     <div className="grid grid-cols-1 md:grid-cols-2 gap-4">
                       <div>
-                        <p className="text-xs text-gray-500">Name</p>
-                        <p className="text-sm font-medium">
+                        <p className="text-xs text-gray-400">Name</p>
+                        <p className="text-sm font-medium text-white">
                           {resumeData.contactInfo?.name || "Not found"}
                         </p>
                       </div>
                       <div>
-                        <p className="text-xs text-gray-500">Email</p>
-                        <p className="text-sm font-medium">
+                        <p className="text-xs text-gray-400">Email</p>
+                        <p className="text-sm font-medium text-white">
                           {resumeData.contactInfo?.email || "Not found"}
                         </p>
                       </div>
                       <div>
-                        <p className="text-xs text-gray-500">Phone</p>
-                        <p className="text-sm font-medium">
+                        <p className="text-xs text-gray-400">Phone</p>
+                        <p className="text-sm font-medium text-white">
                           {resumeData.contactInfo?.phone || "Not found"}
                         </p>
                       </div>
@@ -482,23 +475,23 @@ export default function CandidateResumePage() {
 
                 {/* Skills */}
                 <div className="mb-6">
-                  <h3 className="text-sm font-medium text-gray-900 mb-3">
+                  <h3 className="text-sm font-medium text-gray-200 mb-3">
                     Extracted Skills
                   </h3>
-                  <div className="bg-gray-50 p-4 rounded-md">
+                  <div className="bg-white/10 p-4 rounded-md">
                     {resumeData.skills && resumeData.skills.length > 0 ? (
                       <div className="flex flex-wrap gap-2">
                         {resumeData.skills.map((skill, index) => (
                           <span
                             key={index}
-                            className="px-2 py-1 bg-blue-100 text-blue-800 rounded-full text-xs"
+                            className="px-2 py-1 bg-green-100 text-green-800 rounded-full text-xs"
                           >
                             {skill}
                           </span>
                         ))}
                       </div>
                     ) : (
-                      <p className="text-sm text-gray-600">
+                      <p className="text-sm text-gray-200">
                         No skills extracted
                       </p>
                     )}
@@ -507,29 +500,29 @@ export default function CandidateResumePage() {
 
                 {/* Work Experience */}
                 <div className="mb-6">
-                  <h3 className="text-sm font-medium text-gray-900 mb-3">
+                  <h3 className="text-sm font-medium text-gray-200 mb-3">
                     Work Experience
                   </h3>
-                  <div className="bg-gray-50 p-4 rounded-md">
+                  <div className="bg-white/10 p-4 rounded-md">
                     {resumeData.workExperience &&
                     resumeData.workExperience.length > 0 ? (
                       <div className="space-y-4">
                         {resumeData.workExperience.map((experience, index) => (
                           <div
                             key={index}
-                            className="border-l-2 border-blue-500 pl-4"
+                            className="border-l-2 border-green-500 pl-4"
                           >
-                            <p className="text-sm font-medium">
+                            <p className="text-sm font-medium text-white">
                               {experience.position}
                             </p>
-                            <p className="text-xs text-gray-600">
+                            <p className="text-xs text-gray-200">
                               {experience.company}
                             </p>
-                            <p className="text-xs text-gray-500">
+                            <p className="text-xs text-gray-400">
                               {experience.duration}
                             </p>
                             {experience.responsibilities && (
-                              <ul className="mt-2 text-xs text-gray-600 space-y-1 list-disc list-inside">
+                              <ul className="mt-2 text-xs text-gray-300 space-y-1 list-disc list-inside">
                                 {Array.isArray(experience.responsibilities) ? (
                                   experience.responsibilities.map(
                                     (resp, idx) => <li key={idx}>{resp}</li>,
@@ -543,7 +536,7 @@ export default function CandidateResumePage() {
                         ))}
                       </div>
                     ) : (
-                      <p className="text-sm text-gray-600">
+                      <p className="text-sm text-gray-200">
                         No work experience extracted
                       </p>
                     )}
@@ -552,10 +545,10 @@ export default function CandidateResumePage() {
 
                 {/* Education */}
                 <div>
-                  <h3 className="text-sm font-medium text-gray-900 mb-3">
+                  <h3 className="text-sm font-medium text-gray-200 mb-3">
                     Education
                   </h3>
-                  <div className="bg-gray-50 p-4 rounded-md">
+                  <div className="bg-white/10 p-4 rounded-md">
                     {resumeData.education && resumeData.education.length > 0 ? (
                       <div className="space-y-4">
                         {resumeData.education.map((edu, index) => (
@@ -563,20 +556,20 @@ export default function CandidateResumePage() {
                             key={index}
                             className="border-l-2 border-green-500 pl-4"
                           >
-                            <p className="text-sm font-medium">
+                            <p className="text-sm font-medium text-white">
                               {edu.institution}
                             </p>
-                            <p className="text-xs text-gray-600">
+                            <p className="text-xs text-gray-300">
                               {edu.degree}
                             </p>
-                            <p className="text-xs text-gray-500">
+                            <p className="text-xs text-gray-400">
                               {edu.graduationYear}
                             </p>
                           </div>
                         ))}
                       </div>
                     ) : (
-                      <p className="text-sm text-gray-600">
+                      <p className="text-sm text-gray-300">
                         No education history extracted
                       </p>
                     )}
@@ -590,4 +583,3 @@ export default function CandidateResumePage() {
     </div>
   );
 }
-

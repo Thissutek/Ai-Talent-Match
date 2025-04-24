@@ -1,12 +1,22 @@
-'use client';
+"use client";
 
-import { useState, useEffect } from 'react';
-import { useRouter } from 'next/navigation';
-import Link from 'next/link';
-import { supabase, signOut } from '@/lib/supabase/client';
-import SkillsChat from '@/components/candidate/SkillsChat';
-import { assessCandidateSkills, calculateCandidateRanking } from '@/lib/ai/skillChecker';
-import { FiArrowLeft, FiLogOut, FiAward, FiCheckCircle, FiAlertCircle, FiInfo } from 'react-icons/fi';
+import { useState, useEffect } from "react";
+import { useRouter } from "next/navigation";
+import Link from "next/link";
+import { supabase, signOut } from "@/lib/supabase/client";
+import SkillsChat from "@/components/candidate/SkillsChat";
+import {
+  assessCandidateSkills,
+  calculateCandidateRanking,
+} from "@/lib/ai/skillChecker";
+import {
+  FiArrowLeft,
+  FiLogOut,
+  FiAward,
+  FiCheckCircle,
+  FiAlertCircle,
+  FiInfo,
+} from "react-icons/fi";
 
 export default function CandidateChatPage() {
   const router = useRouter();
@@ -16,50 +26,53 @@ export default function CandidateChatPage() {
   const [error, setError] = useState(null);
   const [chatCompleted, setChatCompleted] = useState(false);
   const [assessment, setAssessment] = useState(null);
-  
+
   // Fetch user and profile data
   useEffect(() => {
     async function fetchUserData() {
       try {
         // Get current user
-        const { data: { user }, error: userError } = await supabase.auth.getUser();
-        
+        const {
+          data: { user },
+          error: userError,
+        } = await supabase.auth.getUser();
+
         if (userError || !user) {
-          throw new Error('Not authenticated');
+          throw new Error("Not authenticated");
         }
-        
+
         setUser(user);
-        
+
         // Get candidate profile
         const { data: profile, error: profileError } = await supabase
-          .from('candidate_profiles')
-          .select('*')
-          .eq('user_id', user.id)
+          .from("candidate_profiles")
+          .select("*")
+          .eq("user_id", user.id)
           .single();
-        
+
         if (!profileError && profile) {
           setProfile(profile);
-          
+
           // Check if assessment was already completed
           if (profile.ai_ranking && profile.ai_notes) {
             setChatCompleted(true);
             setAssessment(JSON.parse(profile.ai_notes));
           }
         }
-        
+
         setLoading(false);
       } catch (error) {
-        console.error('Error fetching user data:', error);
+        console.error("Error fetching user data:", error);
         setError(error.message);
         setLoading(false);
-        
+
         // Redirect to login if not authenticated
-        if (error.message === 'Not authenticated') {
-          router.push('/login');
+        if (error.message === "Not authenticated") {
+          router.push("/login");
         }
       }
     }
-    
+
     fetchUserData();
   }, [router]);
 
@@ -67,9 +80,9 @@ export default function CandidateChatPage() {
   const handleSignOut = async () => {
     try {
       await signOut();
-      router.push('/login');
+      router.push("/login");
     } catch (error) {
-      console.error('Error signing out:', error);
+      console.error("Error signing out:", error);
     }
   };
 
@@ -78,31 +91,34 @@ export default function CandidateChatPage() {
     try {
       // Generate the assessment
       const newAssessment = await assessCandidateSkills(
-        { parsedResume: profile.parsed_resume, extractedSkills: profile.skills },
-        chatHistory
+        {
+          parsedResume: profile.parsed_resume,
+          extractedSkills: profile.skills,
+        },
+        chatHistory,
       );
-      
+
       // Calculate ranking
       const ranking = calculateCandidateRanking(newAssessment);
-      
+
       // Update candidate profile with assessment results
       const { error } = await supabase
-        .from('candidate_profiles')
+        .from("candidate_profiles")
         .update({
           ai_ranking: ranking,
           ai_notes: JSON.stringify(newAssessment),
-          updated_at: new Date()
+          updated_at: new Date(),
         })
-        .eq('user_id', user.id);
-      
+        .eq("user_id", user.id);
+
       if (error) throw error;
-      
+
       // Update state
       setAssessment(newAssessment);
       setChatCompleted(true);
     } catch (error) {
-      console.error('Error updating assessment:', error);
-      setError('Failed to save assessment. Please try again.');
+      console.error("Error updating assessment:", error);
+      setError("Failed to save assessment. Please try again.");
     }
   };
 
@@ -121,30 +137,28 @@ export default function CandidateChatPage() {
   }
 
   return (
-    <div className="min-h-screen bg-gray-100">
+    <div className="min-h-screen bg-black">
       {/* Header */}
-      <header className="bg-white shadow">
+      <header className="shadow">
         <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 py-4 flex justify-between items-center">
           <div className="flex items-center">
-            <Link href="/candidate/dashboard" className="flex items-center text-gray-700 hover:text-blue-600">
+            <Link
+              href="/candidate/dashboard"
+              className="flex items-center text-gray-200 hover:text-[#00ff9d]"
+            >
               <FiArrowLeft className="mr-2" />
               <span>Back to Dashboard</span>
             </Link>
           </div>
-          <button
-            onClick={handleSignOut}
-            className="flex items-center px-3 py-2 border border-gray-300 rounded-md text-gray-700 hover:bg-gray-50"
-          >
-            <FiLogOut className="mr-2" />
-            <span>Sign Out</span>
-          </button>
         </div>
       </header>
 
       <main className="max-w-7xl mx-auto py-6 sm:px-6 lg:px-8">
         <div className="px-4 sm:px-0">
-          <h1 className="text-2xl font-semibold text-gray-900">Skills Assessment</h1>
-          <p className="mt-1 text-sm text-gray-600">
+          <h1 className="text-2xl font-semibold text-gray-200">
+            Skills Assessment
+          </h1>
+          <p className="mt-1 text-sm text-gray-300">
             Chat with our AI to verify your skills and experience
           </p>
         </div>
@@ -158,9 +172,14 @@ export default function CandidateChatPage() {
                   <FiAlertCircle className="h-5 w-5 text-yellow-400" />
                 </div>
                 <div className="ml-3">
-                  <h3 className="text-sm font-medium text-yellow-800">Resume Required</h3>
+                  <h3 className="text-sm font-medium text-yellow-800">
+                    Resume Required
+                  </h3>
                   <div className="mt-2 text-sm text-yellow-700">
-                    <p>Please upload your resume first to get the most accurate skill assessment.</p>
+                    <p>
+                      Please upload your resume first to get the most accurate
+                      skill assessment.
+                    </p>
                   </div>
                   <div className="mt-4">
                     <div className="-mx-2 -my-1.5 flex">
@@ -178,12 +197,15 @@ export default function CandidateChatPage() {
           )}
 
           {/* Chat Interface */}
-          <div className="bg-white rounded-lg shadow-md overflow-hidden">
-            <div className="px-6 py-5 bg-gray-50 border-b border-gray-200">
-              <h2 className="text-lg font-medium text-gray-900">Skill Assessment Chat</h2>
+          <div className="bg-white/10 rounded-lg shadow-md overflow-hidden">
+            <div className="px-6 py-5 bg-white/10 ">
+              <h2 className="text-lg font-medium text-gray-200">
+                Skill Assessment Chat
+              </h2>
               {!chatCompleted && (
-                <p className="mt-1 text-sm text-gray-500">
-                  Answer questions to verify your skills and improve your profile
+                <p className="mt-1 text-sm text-gray-200">
+                  Answer questions to verify your skills and improve your
+                  profile
                 </p>
               )}
             </div>
@@ -193,53 +215,68 @@ export default function CandidateChatPage() {
                 <div className="space-y-6">
                   <div className="flex items-center text-green-600">
                     <FiCheckCircle className="h-6 w-6 mr-2" />
-                    <h3 className="text-lg font-medium">Assessment Completed</h3>
+                    <h3 className="text-lg font-medium">
+                      Assessment Completed
+                    </h3>
                   </div>
-                  
-                  <div className="bg-gray-50 p-4 rounded-md">
-                    <h4 className="font-medium text-gray-900 mb-2">Summary</h4>
-                    <p className="text-sm text-gray-600">{assessment.summary}</p>
+
+                  <div className="bg-white/10 p-4 rounded-md">
+                    <h4 className="font-medium text-gray-200 mb-2">Summary</h4>
+                    <p className="text-sm text-gray-300">
+                      {assessment.summary}
+                    </p>
                   </div>
-                  
+
                   <div className="grid grid-cols-1 gap-6 md:grid-cols-2">
                     {/* Verified Skills */}
-                    <div className="bg-gray-50 p-4 rounded-md">
-                      <h4 className="font-medium text-gray-900 mb-2 flex items-center">
-                        <FiAward className="text-blue-500 mr-2" />
+                    <div className="bg-white/10 p-4 rounded-md">
+                      <h4 className="font-medium text-gray-200 mb-2 flex items-center">
+                        <FiAward className="text-green-500 mr-2" />
                         Verified Skills
                       </h4>
-                      {assessment.verifiedSkills && Object.keys(assessment.verifiedSkills).length > 0 ? (
+                      {assessment.verifiedSkills &&
+                      Object.keys(assessment.verifiedSkills).length > 0 ? (
                         <div className="space-y-2">
-                          {Object.entries(assessment.verifiedSkills).map(([skill, confidence], index) => (
-                            <div key={index} className="flex items-center justify-between">
-                              <span className="text-sm font-medium">{skill}</span>
-                              <div className="flex items-center">
-                                <div className="w-24 h-2 bg-gray-200 rounded-full mr-2">
-                                  <div 
-                                    className="h-2 bg-blue-500 rounded-full" 
-                                    style={{ width: `${confidence * 100}%` }}
-                                  ></div>
-                                </div>
-                                <span className="text-xs text-gray-500">
-                                  {Math.round(confidence * 100)}%
+                          {Object.entries(assessment.verifiedSkills).map(
+                            ([skill, confidence], index) => (
+                              <div
+                                key={index}
+                                className="flex items-center justify-between"
+                              >
+                                <span className="text-sm font-medium text-white">
+                                  {skill}
                                 </span>
+                                <div className="flex items-center">
+                                  <div className="w-24 h-2 bg-gray-200 rounded-full mr-2">
+                                    <div
+                                      className="h-2 bg-green-500 rounded-full"
+                                      style={{ width: `${confidence * 100}%` }}
+                                    ></div>
+                                  </div>
+                                  <span className="text-xs text-gray-500">
+                                    {Math.round(confidence * 100)}%
+                                  </span>
+                                </div>
                               </div>
-                            </div>
-                          ))}
+                            ),
+                          )}
                         </div>
                       ) : (
-                        <p className="text-sm text-gray-500">No skills have been verified yet</p>
+                        <p className="text-sm text-gray-200">
+                          No skills have been verified yet
+                        </p>
                       )}
                     </div>
-                    
+
                     {/* Areas for Improvement */}
-                    <div className="bg-gray-50 p-4 rounded-md">
-                      <h4 className="font-medium text-gray-900 mb-2 flex items-center">
+                    <div className="bg-white/10 p-4 rounded-md">
+                      <h4 className="font-medium text-gray-200 mb-2 flex items-center">
                         <FiInfo className="text-yellow-500 mr-2" />
                         Areas for Improvement
                       </h4>
-                      {assessment.skillGaps && assessment.skillGaps.length > 0 ? (
-                        <ul className="space-y-1 text-sm text-gray-600">
+                      {assessment.skillGaps &&
+                      assessment.skillGaps.length > 0 ? (
+                        <ul className="space-y-1 text-sm text-gray-300">
                           {assessment.skillGaps.map((gap, index) => (
                             <li key={index} className="flex items-start">
                               <span className="text-yellow-500 mr-2">•</span>
@@ -248,26 +285,28 @@ export default function CandidateChatPage() {
                           ))}
                         </ul>
                       ) : (
-                        <p className="text-sm text-gray-500">No improvement areas identified</p>
+                        <p className="text-sm text-gray-300">
+                          No improvement areas identified
+                        </p>
                       )}
                     </div>
                   </div>
-                  
+
                   <div className="flex justify-center mt-4">
                     <button
                       onClick={handleStartNewChat}
-                      className="inline-flex items-center px-4 py-2 border border-transparent rounded-md shadow-sm text-sm font-medium text-white bg-blue-600 hover:bg-blue-700 focus:outline-none focus:ring-2 focus:ring-offset-2 focus:ring-blue-500"
+                      className="inline-flex items-center px-4 py-2 border rounded-md shadow-sm text-sm font-medium primary-button primary-button:hover focus:outline-none focus:ring-2 focus:ring-offset-2 focus:ring-blue-500"
                     >
                       Start New Assessment
                     </button>
                   </div>
                 </div>
               ) : (
-                <SkillsChat 
+                <SkillsChat
                   candidateId={profile?.id}
                   parsedResume={{
                     parsedResume: profile?.parsed_resume,
-                    extractedSkills: profile?.skills
+                    extractedSkills: profile?.skills,
                   }}
                   onChatComplete={handleChatComplete}
                 />
@@ -279,3 +318,4 @@ export default function CandidateChatPage() {
     </div>
   );
 }
+
