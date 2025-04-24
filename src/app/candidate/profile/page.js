@@ -331,7 +331,7 @@ export default function CandidateProfilePage() {
                   ) : (
                     <div>
                       <p className="text-sm text-gray-600 mb-4">
-                        You haven't uploaded a resume yet.
+                        You haven&apos;t uploaded a resume yet.
                       </p>
                       <Link
                         href="/candidate/resume"
