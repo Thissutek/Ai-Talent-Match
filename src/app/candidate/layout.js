@@ -1,10 +1,18 @@
-'use client';
+"use client";
 
-import { useState, useEffect } from 'react';
-import { useRouter, usePathname } from 'next/navigation';
-import Link from 'next/link';
-import { supabase, signOut } from '@/lib/supabase/client';
-import { FiUser, FiFileText, FiMessageSquare, FiHome, FiLogOut, FiMenu, FiX } from 'react-icons/fi';
+import { useState, useEffect } from "react";
+import { useRouter, usePathname } from "next/navigation";
+import Link from "next/link";
+import { supabase, signOut } from "@/lib/supabase/client";
+import {
+  FiUser,
+  FiFileText,
+  FiMessageSquare,
+  FiHome,
+  FiLogOut,
+  FiMenu,
+  FiX,
+} from "react-icons/fi";
 
 export default function CandidateLayout({ children }) {
   const router = useRouter();
@@ -17,51 +25,54 @@ export default function CandidateLayout({ children }) {
   useEffect(() => {
     async function checkAuth() {
       try {
-        const { data: { user }, error } = await supabase.auth.getUser();
-        
+        const {
+          data: { user },
+          error,
+        } = await supabase.auth.getUser();
+
         if (error || !user) {
-          router.push('/login');
+          router.push("/login");
           return;
         }
-        
+
         // Verify user is a candidate
         const { data: userData, error: userError } = await supabase
-          .from('users')
-          .select('user_type')
-          .eq('id', user.id)
+          .from("users")
+          .select("user_type")
+          .eq("id", user.id)
           .single();
-        
-        if (userError || userData?.user_type !== 'candidate') {
-          router.push('/login');
+
+        if (userError || userData?.user_type !== "candidate") {
+          router.push("/login");
           return;
         }
-        
+
         setUser(user);
         setLoading(false);
       } catch (error) {
-        console.error('Auth error:', error);
-        router.push('/login');
+        console.error("Auth error:", error);
+        router.push("/login");
       }
     }
-    
+
     checkAuth();
   }, [router]);
 
   const handleSignOut = async () => {
     try {
       await signOut();
-      router.push('/login');
+      router.push("/login");
     } catch (error) {
-      console.error('Sign out error:', error);
+      console.error("Sign out error:", error);
     }
   };
 
   // Navigation items
   const navigation = [
-    { name: 'Dashboard', href: '/candidate/dashboard', icon: FiHome },
-    { name: 'Profile', href: '/candidate/profile', icon: FiUser },
-    { name: 'Resume', href: '/candidate/resume', icon: FiFileText },
-    { name: 'Skills Chat', href: '/candidate/chat', icon: FiMessageSquare },
+    { name: "Dashboard", href: "/candidate/dashboard", icon: FiHome },
+    { name: "Profile", href: "/candidate/profile", icon: FiUser },
+    { name: "Resume", href: "/candidate/resume", icon: FiFileText },
+    { name: "Skills Chat", href: "/candidate/chat", icon: FiMessageSquare },
   ];
 
   if (loading) {
@@ -73,26 +84,28 @@ export default function CandidateLayout({ children }) {
   }
 
   return (
-    <div className="min-h-screen bg-gray-100">
+    <div className="min-h-screen bg-black">
       {/* Mobile sidebar */}
       <div className="lg:hidden">
         <div className="fixed inset-0 flex z-40">
           {/* Sidebar backdrop */}
           {sidebarOpen && (
-            <div 
+            <div
               className="fixed inset-0 bg-gray-600 bg-opacity-75 transition-opacity"
               onClick={() => setSidebarOpen(false)}
             ></div>
           )}
-          
+
           {/* Sidebar */}
-          <div 
+          <div
             className={`fixed inset-y-0 left-0 flex flex-col w-64 bg-white transform transition duration-300 ease-in-out ${
-              sidebarOpen ? 'translate-x-0' : '-translate-x-full'
+              sidebarOpen ? "translate-x-0" : "-translate-x-full"
             }`}
           >
             <div className="flex items-center justify-between h-16 flex-shrink-0 px-4 bg-gray-50">
-              <span className="text-xl font-semibold text-gray-800">Talent Match AI</span>
+              <span className="text-xl font-semibold text-gray-800">
+                Talent Match AI
+              </span>
               <button
                 onClick={() => setSidebarOpen(false)}
                 className="h-8 w-8 rounded-full flex items-center justify-center text-gray-500 hover:text-gray-600 focus:outline-none"
@@ -108,14 +121,16 @@ export default function CandidateLayout({ children }) {
                     href={item.href}
                     className={`group flex items-center px-3 py-2 text-sm font-medium rounded-md ${
                       pathname === item.href
-                        ? 'bg-blue-50 text-blue-700'
-                        : 'text-gray-700 hover:bg-gray-50'
+                        ? "bg-blue-50 text-blue-700"
+                        : "text-gray-700 hover:bg-gray-50"
                     }`}
                   >
-                    <item.icon 
+                    <item.icon
                       className={`mr-3 h-5 w-5 ${
-                        pathname === item.href ? 'text-blue-500' : 'text-gray-500'
-                      }`} 
+                        pathname === item.href
+                          ? "text-blue-500"
+                          : "text-gray-500"
+                      }`}
                     />
                     {item.name}
                   </Link>
@@ -137,9 +152,9 @@ export default function CandidateLayout({ children }) {
 
       {/* Static sidebar for desktop */}
       <div className="hidden lg:flex lg:w-64 lg:flex-col lg:fixed lg:inset-y-0">
-        <div className="flex flex-col flex-grow border-r border-gray-200 bg-white">
-          <div className="flex items-center h-16 flex-shrink-0 px-4 bg-gray-50">
-            <span className="text-xl font-semibold text-gray-800">Talent Match AI</span>
+        <div className="flex flex-col flex-grow bg-white/10">
+          <div className="flex items-center h-16 flex-shrink-0 px-4 ">
+            <span className="text-xl font-semibold primary">NeuroMatch</span>
           </div>
           <div className="flex-1 flex flex-col overflow-y-auto">
             <nav className="flex-1 px-2 py-4 space-y-1">
@@ -149,25 +164,25 @@ export default function CandidateLayout({ children }) {
                   href={item.href}
                   className={`group flex items-center px-3 py-2 text-sm font-medium rounded-md ${
                     pathname === item.href
-                      ? 'bg-blue-50 text-blue-700'
-                      : 'text-gray-700 hover:bg-gray-50'
+                      ? "primary-nav"
+                      : "text-white hover:bg-black "
                   }`}
                 >
-                  <item.icon 
+                  <item.icon
                     className={`mr-3 h-5 w-5 ${
-                      pathname === item.href ? 'text-blue-500' : 'text-gray-500'
-                    }`} 
+                      pathname === item.href ? "text-black" : "text-white"
+                    }`}
                   />
                   {item.name}
                 </Link>
               ))}
             </nav>
-            <div className="px-3 py-4 border-t border-gray-200">
+            <div className="px-3 py-4 ">
               <button
                 onClick={handleSignOut}
-                className="flex items-center w-full px-3 py-2 text-sm font-medium text-gray-700 rounded-md hover:bg-gray-50"
+                className="flex items-center w-full px-3 py-2 text-sm font-medium text-white rounded-md hover:bg-black"
               >
-                <FiLogOut className="mr-3 h-5 w-5 text-gray-500" />
+                <FiLogOut className="mr-3 h-5 w-5 text-white" />
                 Sign Out
               </button>
             </div>
@@ -192,9 +207,7 @@ export default function CandidateLayout({ children }) {
       {/* Main content */}
       <div className="lg:pl-64 flex flex-col">
         <main className="flex-1">
-          <div className="pt-2 pb-6 lg:pt-6">
-            {children}
-          </div>
+          <div className="pt-2 pb-6 lg:pt-6">{children}</div>
         </main>
       </div>
     </div>

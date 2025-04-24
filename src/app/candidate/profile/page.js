@@ -151,46 +151,39 @@ export default function CandidateProfilePage() {
   }
 
   return (
-    <div className="min-h-screen bg-gray-100">
+    <div className="min-h-screen bg-black">
       {/* Header */}
-      <header className="bg-white shadow">
+      <header className="shadow">
         <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 py-4 flex justify-between items-center">
           <div className="flex items-center">
             <Link
               href="/candidate/dashboard"
-              className="flex items-center text-gray-700 hover:text-blue-600"
+              className="flex items-center text-gray-200 hover:text-[#00ff9d]"
             >
               <FiArrowLeft className="mr-2" />
               <span>Back to Dashboard</span>
             </Link>
           </div>
-          <button
-            onClick={handleSignOut}
-            className="flex items-center px-3 py-2 border border-gray-300 rounded-md text-gray-700 hover:bg-gray-50"
-          >
-            <FiLogOut className="mr-2" />
-            <span>Sign Out</span>
-          </button>
         </div>
       </header>
 
       <main className="max-w-7xl mx-auto py-6 sm:px-6 lg:px-8">
         <div className="px-4 sm:px-0">
-          <h1 className="text-2xl font-semibold text-gray-900">Your Profile</h1>
-          <p className="mt-1 text-sm text-gray-600">
+          <h1 className="text-2xl font-semibold text-gray-200">Your Profile</h1>
+          <p className="mt-1 text-sm text-gray-400">
             Manage your personal information and view your profile
           </p>
         </div>
         <div className="mt-6 px-4 sm:px-0">
-          <div className="bg-white rounded-lg shadow-md overflow-hidden">
+          <div className="bg-white/10 rounded-lg shadow-md overflow-hidden">
             {/* Profile header */}
-            <div className="px-6 py-5 bg-gray-50 border-b border-gray-200 flex justify-between items-center">
-              <h2 className="text-lg font-medium text-gray-900">
+            <div className="px-6 py-5 bg-white/10 flex justify-between items-center">
+              <h2 className="text-lg font-medium text-gray-200">
                 Personal Information
               </h2>
               <button
                 onClick={() => setEditMode(!editMode)}
-                className="flex items-center text-sm text-blue-600 hover:text-blue-500"
+                className="flex items-center text-sm text-green-600 hover:text-green-500"
               >
                 <FiEdit className="mr-1" />
                 {editMode ? "Cancel" : "Edit"}
@@ -205,7 +198,7 @@ export default function CandidateProfilePage() {
                     <div>
                       <label
                         htmlFor="full_name"
-                        className="block text-sm font-medium text-gray-700"
+                        className="block text-sm font-medium text-gray-200"
                       >
                         Full Name
                       </label>
@@ -215,13 +208,13 @@ export default function CandidateProfilePage() {
                         name="full_name"
                         value={formData.full_name}
                         onChange={handleInputChange}
-                        className="mt-1 block w-full rounded-md border border-gray-300 py-2 px-3 shadow-sm focus:border-blue-500 focus:outline-none focus:ring-blue-500 sm:text-sm"
+                        className="mt-1 block w-full bg-white rounded-md border border-gray-300 py-2 px-3 shadow-sm focus:border-green-500 focus:outline-none focus:ring-green-500 sm:text-sm"
                       />
                     </div>
                     <div>
                       <label
                         htmlFor="email"
-                        className="block text-sm font-medium text-gray-700"
+                        className="block text-sm font-medium text-gray-200"
                       >
                         Email
                       </label>
@@ -230,16 +223,16 @@ export default function CandidateProfilePage() {
                         id="email"
                         value={user?.email || ""}
                         disabled
-                        className="mt-1 block w-full rounded-md border border-gray-300 bg-gray-50 py-2 px-3 shadow-sm sm:text-sm text-gray-500"
+                        className="mt-1 block w-full rounded-md border border-gray-300 bg-gray-50 py-2 px-3 shadow-sm sm:text-sm text-gray-600"
                       />
-                      <p className="mt-1 text-xs text-gray-500">
+                      <p className="mt-1 text-xs text-gray-300">
                         Email cannot be changed
                       </p>
                     </div>
                     <div>
                       <label
                         htmlFor="phone"
-                        className="block text-sm font-medium text-gray-700"
+                        className="block text-sm font-medium text-gray-200"
                       >
                         Phone Number
                       </label>
@@ -249,13 +242,13 @@ export default function CandidateProfilePage() {
                         name="phone"
                         value={formData.phone}
                         onChange={handleInputChange}
-                        className="mt-1 block w-full rounded-md border border-gray-300 py-2 px-3 shadow-sm focus:border-blue-500 focus:outline-none focus:ring-blue-500 sm:text-sm"
+                        className="mt-1 block w-full rounded-md border bg-white border-gray-300 py-2 px-3 shadow-sm focus:border-green-500 focus:outline-none focus:ring-green-500 sm:text-sm"
                       />
                     </div>
                     <div className="flex justify-end">
                       <button
                         type="submit"
-                        className="ml-3 inline-flex justify-center py-2 px-4 border border-transparent shadow-sm text-sm font-medium rounded-md text-white bg-blue-600 hover:bg-blue-700 focus:outline-none focus:ring-2 focus:ring-offset-2 focus:ring-blue-500"
+                        className="ml-3 inline-flex justify-center py-2 px-4 border shadow-sm text-sm font-medium rounded-md primary-button primary-button:hover focus:outline-none focus:ring-2 focus:ring-offset-2 focus:ring-blue-500"
                       >
                         Save Changes
                       </button>
@@ -266,34 +259,34 @@ export default function CandidateProfilePage() {
                 /* Profile View */
                 <div className="space-y-4">
                   <div className="flex items-start">
-                    <FiUser className="mt-0.5 mr-3 h-5 w-5 text-gray-400" />
+                    <FiUser className="mt-0.5 mr-3 h-5 w-5 text-gray-200" />
                     <div>
-                      <h3 className="text-sm font-medium text-gray-500">
+                      <h3 className="text-sm font-medium text-gray-200">
                         Full Name
                       </h3>
-                      <p className="mt-1 text-sm text-gray-900">
+                      <p className="mt-1 text-sm text-gray-300">
                         {profile?.full_name || "Not provided"}
                       </p>
                     </div>
                   </div>
                   <div className="flex items-start">
-                    <FiMail className="mt-0.5 mr-3 h-5 w-5 text-gray-400" />
+                    <FiMail className="mt-0.5 mr-3 h-5 w-5 text-gray-200" />
                     <div>
-                      <h3 className="text-sm font-medium text-gray-500">
+                      <h3 className="text-sm font-medium text-gray-200">
                         Email
                       </h3>
-                      <p className="mt-1 text-sm text-gray-900">
+                      <p className="mt-1 text-sm text-gray-300">
                         {user?.email}
                       </p>
                     </div>
                   </div>
                   <div className="flex items-start">
-                    <FiPhone className="mt-0.5 mr-3 h-5 w-5 text-gray-400" />
+                    <FiPhone className="mt-0.5 mr-3 h-5 w-5 text-gray-200" />
                     <div>
-                      <h3 className="text-sm font-medium text-gray-500">
+                      <h3 className="text-sm font-medium text-gray-200">
                         Phone Number
                       </h3>
-                      <p className="mt-1 text-sm text-gray-900">
+                      <p className="mt-1 text-sm text-gray-300">
                         {profile?.parsed_resume?.contactInfo?.phone ||
                           "Not provided"}
                       </p>
@@ -308,20 +301,20 @@ export default function CandidateProfilePage() {
           {profile && (
             <div className="mt-6 grid grid-cols-1 gap-6 lg:grid-cols-2">
               {/* Resume Section */}
-              <div className="bg-white rounded-lg shadow-md overflow-hidden">
-                <div className="px-6 py-5 bg-gray-50 border-b border-gray-200">
-                  <h2 className="text-lg font-medium text-gray-900">Resume</h2>
+              <div className="bg-white/10 rounded-lg shadow-md overflow-hidden">
+                <div className="px-6 py-5 bg-white/10 ">
+                  <h2 className="text-lg font-medium text-gray-200">Resume</h2>
                 </div>
                 <div className="px-6 py-5">
                   {profile.resume_url ? (
                     <div>
-                      <p className="text-sm text-gray-600 mb-4">
+                      <p className="text-sm text-gray-300 mb-4">
                         Your resume has been uploaded and processed.
                       </p>
                       <div className="flex flex-col sm:flex-row sm:space-x-3">
                         <Link
                           href="/candidate/resume"
-                          className="mb-2 sm:mb-0 inline-flex items-center px-4 py-2 border border-gray-300 shadow-sm text-sm font-medium rounded-md text-gray-700 bg-white hover:bg-gray-50 focus:outline-none focus:ring-2 focus:ring-offset-2 focus:ring-blue-500"
+                          className="mb-2 sm:mb-0 inline-flex items-center px-4 py-2 border shadow-sm text-sm font-medium rounded-md secondary-button secondary-button:hover focus:outline-none focus:ring-2 focus:ring-offset-2 focus:ring-blue-500"
                         >
                           Manage Resume
                         </Link>
@@ -329,7 +322,7 @@ export default function CandidateProfilePage() {
                           href={profile.resume_url}
                           target="_blank"
                           rel="noopener noreferrer"
-                          className="inline-flex items-center px-4 py-2 border border-transparent shadow-sm text-sm font-medium rounded-md text-white bg-blue-600 hover:bg-blue-700 focus:outline-none focus:ring-2 focus:ring-offset-2 focus:ring-blue-500"
+                          className="inline-flex items-center px-4 py-2 border shadow-sm text-sm font-medium rounded-md primary-button primary-button:hover focus:outline-none focus:ring-2 focus:ring-offset-2 focus:ring-blue-500"
                         >
                           View Resume
                         </a>
@@ -338,7 +331,7 @@ export default function CandidateProfilePage() {
                   ) : (
                     <div>
                       <p className="text-sm text-gray-600 mb-4">
-                        You haven&apos;t uploaded a resume yet.
+                        You haven't uploaded a resume yet.
                       </p>
                       <Link
                         href="/candidate/resume"
@@ -352,14 +345,14 @@ export default function CandidateProfilePage() {
               </div>
 
               {/* Skills Section */}
-              <div className="bg-white rounded-lg shadow-md overflow-hidden">
-                <div className="px-6 py-5 bg-gray-50 border-b border-gray-200">
-                  <h2 className="text-lg font-medium text-gray-900">Skills</h2>
+              <div className="bg-white/10 rounded-lg shadow-md overflow-hidden">
+                <div className="px-6 py-5 bg-white/10 ">
+                  <h2 className="text-lg font-medium text-gray-200">Skills</h2>
                 </div>
                 <div className="px-6 py-5">
                   {profile.skills && profile.skills.length > 0 ? (
                     <div>
-                      <p className="text-sm text-gray-600 mb-4">
+                      <p className="text-sm text-gray-300 mb-4">
                         Skills extracted from your resume and verified through
                         chat.
                       </p>
@@ -367,7 +360,7 @@ export default function CandidateProfilePage() {
                         {profile.skills.map((skill, index) => (
                           <div
                             key={index}
-                            className="flex items-center px-3 py-1 bg-blue-100 text-blue-800 rounded-full text-sm"
+                            className="flex items-center px-3 py-1 bg-green-100 text-green-800 rounded-full text-sm"
                           >
                             <FiAward className="mr-1 h-3 w-3" />
                             {skill}
@@ -377,7 +370,7 @@ export default function CandidateProfilePage() {
                       <div className="mt-4">
                         <Link
                           href="/candidate/chat"
-                          className="inline-flex items-center px-4 py-2 border border-gray-300 shadow-sm text-sm font-medium rounded-md text-gray-700 bg-white hover:bg-gray-50 focus:outline-none focus:ring-2 focus:ring-offset-2 focus:ring-blue-500"
+                          className="inline-flex items-center px-4 py-2 border shadow-sm text-sm font-medium rounded-md primary-button primary-button:hover focus:outline-none focus:ring-2 focus:ring-offset-2 focus:ring-blue-500"
                         >
                           Verify More Skills
                         </Link>
@@ -402,7 +395,6 @@ export default function CandidateProfilePage() {
             </div>
           )}
         </div>
-        passwordstest
       </main>
     </div>
   );

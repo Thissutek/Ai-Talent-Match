@@ -113,7 +113,7 @@ export default function CandidateList() {
   ];
 
   return (
-    <div className="bg-white/20 rounded-lg shadow-lg p-6">
+    <div className="bg-white/10 rounded-lg shadow-lg p-6">
       <h2 className="text-2xl text-white font-bold mb-6">Candidate Search</h2>
 
       {/* Search and filters */}
@@ -295,4 +295,3 @@ export default function CandidateList() {
     </div>
   );
 }
-

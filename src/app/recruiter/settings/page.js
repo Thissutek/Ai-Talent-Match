@@ -154,9 +154,7 @@ export default function SettingsPage() {
   return (
     <div className="max-w-7xl mx-auto py-6 sm:px-6 lg:px-8">
       <div className="px-4 sm:px-0">
-        <h1 className="text-2xl font-semibold text-gray-200">
-          Account Settings
-        </h1>
+        <h1 className="text-2xl font-semibold primary">Account Settings</h1>
         <p className="mt-1 text-sm text-gray-400">
           Manage your profile and notification preferences
         </p>
@@ -367,4 +365,3 @@ export default function SettingsPage() {
     </div>
   );
 }
-

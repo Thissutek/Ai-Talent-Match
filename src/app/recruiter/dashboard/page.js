@@ -116,7 +116,7 @@ export default function RecruiterDashboard() {
 
       {/* Statistics cards */}
       <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-4 gap-6 mb-8">
-        <div className="bg-white/20 rounded-lg shadow p-6">
+        <div className="bg-white/10 rounded-lg shadow p-6">
           <div className="flex items-center">
             <div className="p-3 rounded-full bg-blue-100 text-blue-800">
               <FiUsers size={24} />
@@ -130,7 +130,7 @@ export default function RecruiterDashboard() {
           </div>
         </div>
 
-        <div className="bg-white/20 rounded-lg shadow p-6">
+        <div className="bg-white/10 rounded-lg shadow p-6">
           <div className="flex items-center">
             <div className="p-3 rounded-full bg-green-100 text-green-800">
               <FiCheckSquare size={24} />
@@ -144,7 +144,7 @@ export default function RecruiterDashboard() {
           </div>
         </div>
 
-        <div className="bg-white/20 rounded-lg shadow p-6">
+        <div className="bg-white/10 rounded-lg shadow p-6">
           <div className="flex items-center">
             <div className="p-3 rounded-full bg-yellow-100 text-yellow-800">
               <FiStar size={24} />
@@ -158,7 +158,7 @@ export default function RecruiterDashboard() {
           </div>
         </div>
 
-        <div className="bg-white/20 rounded-lg shadow p-6">
+        <div className="bg-white/10 rounded-lg shadow p-6">
           <div className="flex items-center">
             <div className="p-3 rounded-full bg-purple-100 text-purple-800">
               <FiTrendingUp size={24} />
@@ -180,7 +180,7 @@ export default function RecruiterDashboard() {
       </div>
 
       {/* Quick actions */}
-      <div className="bg-white/20 rounded-lg shadow p-6">
+      <div className="bg-white/10 rounded-lg shadow p-6">
         <h2 className="text-xl text-white font-semibold mb-4">Quick Actions</h2>
         <div className="grid grid-cols-1 md:grid-cols-3 gap-4">
           <button
@@ -211,4 +211,3 @@ export default function RecruiterDashboard() {
     </div>
   );
 }
-
