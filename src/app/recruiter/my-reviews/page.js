@@ -90,8 +90,8 @@ export default function MyReviewsPage() {
   return (
     <div className="max-w-7xl mx-auto py-6 sm:px-6 lg:px-8">
       <div className="px-4 sm:px-0">
-        <h1 className="text-2xl font-semibold text-gray-900">My Reviews</h1>
-        <p className="mt-1 text-sm text-gray-600">
+        <h1 className="text-2xl font-semibold text-gray-200">My Reviews</h1>
+        <p className="mt-1 text-sm text-gray-400">
           View all candidates you have reviewed
         </p>
       </div>
@@ -104,7 +104,7 @@ export default function MyReviewsPage() {
         )}
 
         {reviews.length === 0 ? (
-          <div className="bg-white rounded-lg shadow-md p-8 text-center">
+          <div className="bg-white/10 rounded-lg shadow-md p-8 text-center">
             <div className="inline-block rounded-full p-3 bg-gray-100">
               <FiFileText className="h-6 w-6 text-gray-400" />
             </div>
@@ -124,14 +124,14 @@ export default function MyReviewsPage() {
             </div>
           </div>
         ) : (
-          <div className="bg-white shadow-md rounded-lg overflow-hidden">
-            <div className="px-6 py-5 border-b border-gray-200 bg-gray-50 flex justify-between items-center">
-              <h2 className="text-lg font-medium text-gray-900">
+          <div className="bg-white/10 shadow-md rounded-lg overflow-hidden">
+            <div className="px-6 py-5 border-b border-gray-200 bg-white/10 flex justify-between items-center">
+              <h2 className="text-lg font-medium text-gray-200">
                 Recent Reviews
               </h2>
               <div className="flex items-center">
-                <span className="text-sm text-gray-500 mr-2">Total:</span>
-                <span className="text-sm font-medium text-gray-900">
+                <span className="text-sm text-gray-200 mr-2">Total:</span>
+                <span className="text-sm font-medium text-gray-200">
                   {reviews.length}
                 </span>
               </div>
@@ -142,7 +142,7 @@ export default function MyReviewsPage() {
                 <li key={review.id}>
                   <Link
                     href={`/recruiter/candidates/${review.candidate_profiles.id}`}
-                    className="block hover:bg-gray-50"
+                    className="block hover:bg-gray-800"
                   >
                     <div className="px-6 py-4">
                       <div className="flex items-center justify-between">
@@ -153,7 +153,7 @@ export default function MyReviewsPage() {
                             </div>
                           </div>
                           <div className="ml-4">
-                            <h3 className="text-sm font-medium text-gray-900">
+                            <h3 className="text-sm font-medium text-gray-200">
                               {review.candidate_profiles.full_name ||
                                 "Unnamed Candidate"}
                             </h3>
@@ -173,7 +173,7 @@ export default function MyReviewsPage() {
                               </div>
 
                               {/* Date */}
-                              <div className="ml-3 flex items-center text-xs text-gray-500">
+                              <div className="ml-3 flex items-center text-xs text-gray-300">
                                 <FiCalendar className="h-3 w-3 mr-1" />
                                 <span>{formatDate(review.created_at)}</span>
                               </div>
@@ -197,7 +197,7 @@ export default function MyReviewsPage() {
                             {review.candidate_profiles.ai_ranking?.toFixed(1) ||
                               "N/A"}
                           </div>
-                          <span className="text-xs text-gray-500 mt-1">
+                          <span className="text-xs text-gray-300 mt-1">
                             AI Rating
                           </span>
                         </div>
@@ -205,7 +205,7 @@ export default function MyReviewsPage() {
 
                       {/* Review text */}
                       <div className="mt-2">
-                        <p className="text-sm text-gray-600 line-clamp-2">
+                        <p className="text-sm text-gray-300 line-clamp-2">
                           {review.feedback}
                         </p>
                       </div>
@@ -234,7 +234,7 @@ export default function MyReviewsPage() {
                         )}
 
                       {/* View details link */}
-                      <div className="mt-2 flex items-center text-xs text-blue-600">
+                      <div className="mt-2 flex items-center text-xs text-[#00ff9d]">
                         <span>View candidate details</span>
                         <FiChevronRight className="ml-1 h-4 w-4" />
                       </div>
@@ -249,4 +249,3 @@ export default function MyReviewsPage() {
     </div>
   );
 }
-
