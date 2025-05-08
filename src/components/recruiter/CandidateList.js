@@ -268,6 +268,23 @@ export default function CandidateList() {
           ))
         )}
 
+        {/* Interview Status indicator */}
+        {candidates.interview_status && (
+          <div className="mt-2">
+            <span
+              className={`inline-flex items-center px-2.5 py-0.5 rounded-full text-xs font-medium ${
+                candidates.interview_status === "scheduled"
+                  ? "bg-green-100 text-green-800"
+                  : "bg-yellow-100 text-yellow-800"
+              }`}
+            >
+              {candidates.interview_status === "scheduled"
+                ? "Interview Scheduled"
+                : "Interview Invited"}
+            </span>
+          </div>
+        )}
+
         {/* Loading indicator */}
         {loading && (
           <div className="text-center py-4">

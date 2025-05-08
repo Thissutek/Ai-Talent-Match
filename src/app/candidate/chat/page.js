@@ -17,6 +17,7 @@ import {
   FiAlertCircle,
   FiInfo,
 } from "react-icons/fi";
+import { sendInterviewInvitation } from "@/lib/email/interviewScheduler";
 
 export default function CandidateChatPage() {
   const router = useRouter();
@@ -101,28 +102,89 @@ export default function CandidateChatPage() {
       // Calculate ranking
       const ranking = calculateCandidateRanking(newAssessment);
 
+      console.log("Candidate ranking:", ranking); // Debug log to verify score
+
       // Update candidate profile with assessment results
-      const { error } = await supabase
+      const { data: updatedProfile, error } = await supabase
         .from("candidate_profiles")
         .update({
           ai_ranking: ranking,
           ai_notes: JSON.stringify(newAssessment),
           updated_at: new Date(),
         })
-        .eq("user_id", user.id);
+        .eq("user_id", user.id)
+        .select()
+        .single();
 
       if (error) throw error;
 
-      // Update state
+      // Update state with the updated profile data
+      setProfile(updatedProfile);
       setAssessment(newAssessment);
       setChatCompleted(true);
+
+      // Check if candidate qualifies for interview (score >= 80)
+      if (ranking >= 80) {
+        console.log("Candidate qualifies for interview!"); // Debug log
+
+        try {
+          // For MVP, simulate sending email by updating the database
+          const { data: interviewData, error: interviewError } = await supabase
+            .from("interview_requests")
+            .insert([
+              {
+                candidate_id: updatedProfile.id,
+                status: "pending",
+                available_slots: [
+                  {
+                    date: "2025-05-15",
+                    slots: ["10:00 AM", "1:00 PM", "3:30 PM"],
+                  },
+                  {
+                    date: "2025-05-16",
+                    slots: ["9:30 AM", "11:00 AM", "2:00 PM"],
+                  },
+                  {
+                    date: "2025-05-17",
+                    slots: ["10:30 AM", "1:30 PM", "4:00 PM"],
+                  },
+                ],
+                email_sent: true,
+                created_at: new Date(),
+              },
+            ])
+            .select()
+            .single();
+
+          if (interviewError) throw interviewError;
+
+          // Update candidate's interview status
+          const { error: statusError } = await supabase
+            .from("candidate_profiles")
+            .update({
+              interview_status: "invited",
+              updated_at: new Date(),
+            })
+            .eq("id", updatedProfile.id);
+
+          if (statusError) throw statusError;
+
+          console.log("Interview invitation sent!", interviewData); // Debug log
+
+          // Display a notification to the user (you would need to implement this)
+          alert(
+            "Congratulations! You've qualified for an interview. Check your email for details.",
+          );
+        } catch (interviewErr) {
+          console.error("Error sending interview invitation:", interviewErr);
+          // Continue without failing the whole process
+        }
+      }
     } catch (error) {
       console.error("Error updating assessment:", error);
       setError("Failed to save assessment. Please try again.");
     }
-  };
-
-  // Start a new chat session
+  }; // Start a new chat session
   const handleStartNewChat = () => {
     setChatCompleted(false);
     setAssessment(null);
@@ -318,4 +380,3 @@ export default function CandidateChatPage() {
     </div>
   );
 }
-

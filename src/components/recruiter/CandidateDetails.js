@@ -14,7 +14,11 @@ import {
   FiTrendingUp,
   FiAlertTriangle,
   FiMessageCircle,
+  FiCalendar,
+  FiClock,
+  FiAlertCircle,
 } from "react-icons/fi";
+import { supabase } from "@/lib/supabase/client";
 
 export default function CandidateDetails({ candidateId, recruiterId }) {
   const [candidate, setCandidate] = useState(null);
@@ -25,6 +29,42 @@ export default function CandidateDetails({ candidateId, recruiterId }) {
   const [submitting, setSubmitting] = useState(false);
   const [feedbackSubmitted, setFeedbackSubmitted] = useState(false);
   const [activeTab, setActiveTab] = useState("profile"); // 'profile', 'resume', 'assessment', 'chat'
+  const [interviewData, setInterviewData] = useState(null);
+  const [loadingInterview, setLoadingInterview] = useState(false);
+
+  const fetchInterviewData = async () => {
+    if (!candidate || !candidate.id) return;
+
+    try {
+      setLoadingInterview(true);
+
+      // Fetch interview requests for this candidate
+      const { data, error } = await supabase
+        .from("interview_requests")
+        .select("*")
+        .eq("candidate_id", candidate.id)
+        .order("created_at", { ascending: false })
+        .limit(1);
+
+      if (error) {
+        console.error("Error fetching interview data:", error);
+        setLoadingInterview(false);
+        return;
+      }
+
+      setInterviewData(data.length > 0 ? data[0] : null);
+      setLoadingInterview(false);
+    } catch (err) {
+      console.error("Error in fetchInterviewData:", err);
+      setLoadingInterview(false);
+    }
+  };
+
+  useEffect(() => {
+    if (activeTab === "interview" && candidate) {
+      fetchInterviewData();
+    }
+  }, [activeTab, candidate]);
 
   // Fetch candidate details
   useEffect(() => {
@@ -154,6 +194,18 @@ export default function CandidateDetails({ candidateId, recruiterId }) {
             <FiDownload size={16} className="mr-2" />
             Resume
           </button>
+          <button
+            onClick={() => setActiveTab("interview")}
+            className={`px-4 py-3 text-sm font-medium flex items-center ${
+              activeTab === "interview"
+                ? "border-b-2 border-[#00ff9d] text-[#00ff9d]"
+                : "text-gray-200 hover:text-gray-700"
+            }`}
+          >
+            <FiCalendar size={16} className="mr-2" />
+            Interview
+          </button>
+
           <button
             onClick={() => setActiveTab("assessment")}
             className={`px-4 py-3 text-sm font-medium flex items-center ${
@@ -361,6 +413,190 @@ export default function CandidateDetails({ candidateId, recruiterId }) {
                 <FiAlertTriangle size={20} className="mr-2" />
                 No resume document available.
               </div>
+            )}
+          </div>
+        )}
+
+        {/* Interview Tab */}
+        {activeTab === "interview" && (
+          <div>
+            <h2 className="text-xl font-semibold mb-4 flex items-center text-white">
+              <FiCalendar className="mr-2" size={20} />
+              Interview Status
+            </h2>
+
+            {loadingInterview ? (
+              <div className="flex justify-center py-8">
+                <div className="animate-spin rounded-full h-8 w-8 border-t-2 border-b-2 border-blue-600"></div>
+              </div>
+            ) : (
+              <>
+                {candidate.interview_status ? (
+                  <div>
+                    {candidate.interview_status === "invited" && (
+                      <div className="bg-yellow-50 rounded-lg p-4">
+                        <div className="flex items-start">
+                          <div className="flex-shrink-0">
+                            <FiAlertCircle className="h-5 w-5 text-yellow-400" />
+                          </div>
+                          <div className="ml-3">
+                            <h3 className="font-medium text-yellow-800">
+                              Interview Invitation Sent
+                            </h3>
+                            <p className="mt-2 text-sm text-yellow-700">
+                              An interview invitation has been sent to this
+                              candidate. Waiting for them to select a time slot.
+                            </p>
+                            {interviewData && (
+                              <p className="mt-1 text-xs text-yellow-600">
+                                Invitation sent on{" "}
+                                {new Date(
+                                  interviewData.created_at,
+                                ).toLocaleDateString()}
+                              </p>
+                            )}
+                          </div>
+                        </div>
+                      </div>
+                    )}
+
+                    {candidate.interview_status === "scheduled" && (
+                      <div className="bg-green-50 rounded-lg p-4">
+                        <div className="flex items-start">
+                          <div className="flex-shrink-0">
+                            <FiCheck className="h-5 w-5 text-green-400" />
+                          </div>
+                          <div className="ml-3">
+                            <h3 className="font-medium text-green-800">
+                              Interview Scheduled
+                            </h3>
+                            <p className="mt-2 text-sm text-green-700">
+                              The candidate has scheduled an interview.
+                            </p>
+
+                            {interviewData && interviewData.selected_date && (
+                              <div className="mt-3 bg-white p-4 rounded-md border border-green-200">
+                                <div className="flex items-center">
+                                  <FiCalendar className="text-green-500 mr-2" />
+                                  <span className="font-medium">Date:</span>
+                                  <span className="ml-2">
+                                    {interviewData.selected_date}
+                                  </span>
+                                </div>
+                                <div className="flex items-center mt-2">
+                                  <FiClock className="text-green-500 mr-2" />
+                                  <span className="font-medium">Time:</span>
+                                  <span className="ml-2">
+                                    {interviewData.selected_time}
+                                  </span>
+                                </div>
+                              </div>
+                            )}
+                          </div>
+                        </div>
+                      </div>
+                    )}
+                  </div>
+                ) : (
+                  <div className="bg-gray-50 rounded-lg p-4 text-center">
+                    <p className="text-gray-600">
+                      No interview has been scheduled with this candidate yet.
+                    </p>
+                    {candidate.ai_ranking >= 8 && (
+                      <button
+                        onClick={async () => {
+                          try {
+                            // Create interview request
+                            const availableSlots = [
+                              {
+                                date: "2025-05-15",
+                                slots: ["10:00 AM", "1:00 PM", "3:30 PM"],
+                              },
+                              {
+                                date: "2025-05-16",
+                                slots: ["9:30 AM", "11:00 AM", "2:00 PM"],
+                              },
+                              {
+                                date: "2025-05-17",
+                                slots: ["10:30 AM", "1:30 PM", "4:00 PM"],
+                              },
+                            ];
+
+                            const { error: requestError } = await supabase
+                              .from("interview_requests")
+                              .insert([
+                                {
+                                  candidate_id: candidate.id,
+                                  status: "pending",
+                                  available_slots: availableSlots,
+                                  email_sent: true,
+                                  created_at: new Date(),
+                                },
+                              ]);
+
+                            if (requestError) throw requestError;
+
+                            // Update interview status
+                            const { error: statusError } = await supabase
+                              .from("candidate_profiles")
+                              .update({
+                                interview_status: "invited",
+                              })
+                              .eq("id", candidate.id);
+
+                            if (statusError) throw statusError;
+
+                            alert("Interview invitation sent to candidate!");
+
+                            // Refresh data
+                            window.location.reload();
+                          } catch (err) {
+                            console.error(
+                              "Error sending interview invitation:",
+                              err,
+                            );
+                            alert(
+                              "There was an error sending the interview invitation. Please try again.",
+                            );
+                          }
+                        }}
+                        className="mt-4 inline-flex items-center px-4 py-2 border rounded-md shadow-sm text-sm font-medium primary-button primary-button:hover focus:outline-none focus:ring-2 focus:ring-offset-2 focus:ring-blue-500"
+                      >
+                        <FiMail className="mr-2" />
+                        Send Interview Invitation
+                      </button>
+                    )}
+                  </div>
+                )}
+
+                {/* Available time slots section (only for invited candidates) */}
+                {candidate.interview_status === "invited" && interviewData && (
+                  <div className="mt-6">
+                    <h3 className="text-lg font-medium text-gray-900 mb-3">
+                      Available Time Slots
+                    </h3>
+                    <div className="bg-white border border-gray-200 rounded-lg p-4">
+                      {interviewData.available_slots.map((slot, slotIndex) => (
+                        <div key={slotIndex} className="mb-4">
+                          <h4 className="font-medium text-gray-800">
+                            {slot.date}
+                          </h4>
+                          <div className="mt-2 flex flex-wrap gap-2">
+                            {slot.slots.map((time, timeIndex) => (
+                              <span
+                                key={timeIndex}
+                                className="px-3 py-1 bg-green-100 text-green-800 rounded-full text-sm"
+                              >
+                                {time}
+                              </span>
+                            ))}
+                          </div>
+                        </div>
+                      ))}
+                    </div>
+                  </div>
+                )}
+              </>
             )}
           </div>
         )}
@@ -616,4 +852,3 @@ export default function CandidateDetails({ candidateId, recruiterId }) {
     </div>
   );
 }
-

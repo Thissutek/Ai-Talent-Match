@@ -5,11 +5,12 @@ import { useRouter } from "next/navigation";
 import { supabase, signOut } from "@/lib/supabase/client";
 import ResumeUploader from "@/components/candidate/ResumeUploader";
 import SkillsChat from "@/components/candidate/SkillsChat";
+import InterviewScheduler from "@/components/candidate/InterviewScheduler";
 import {
   assessCandidateSkills,
   calculateCandidateRanking,
 } from "@/lib/ai/skillChecker";
-import { FiLogOut } from "react-icons/fi";
+import { FiAlertCircle } from "react-icons/fi";
 
 export default function CandidateDashboard() {
   const router = useRouter();
@@ -64,7 +65,6 @@ export default function CandidateDashboard() {
     fetchUserData();
   }, [router]);
 
-  // Handle resume upload completion
   // Handle resume upload completion
   const handleResumeUpload = async (data) => {
     try {
@@ -192,7 +192,6 @@ export default function CandidateDashboard() {
       <div className="flex justify-between items-center mb-8">
         <h1 className="text-3xl font-bold">Candidate Dashboard</h1>
       </div>
-
       {/* Progress Steps */}
       <div className="mb-8">
         <div className="flex items-center justify-between">
@@ -212,7 +211,6 @@ export default function CandidateDashboard() {
           </div>
         </div>
       </div>
-
       {/* Step 1: Resume Upload */}
       {currentStep === 1 && (
         <div className="bg-white rounded-lg shadow-md p-6 mb-8">
@@ -229,7 +227,6 @@ export default function CandidateDashboard() {
           />
         </div>
       )}
-
       {/* Step 2: Skills Chat */}
       {currentStep === 2 && resumeUploaded && (
         <div className="bg-white rounded-lg shadow-md p-6 mb-8">
@@ -251,7 +248,6 @@ export default function CandidateDashboard() {
           />
         </div>
       )}
-
       {/* Step 3: Completion */}
       {currentStep === 3 && resumeUploaded && chatCompleted && (
         <div className="bg-white/10 rounded-lg shadow-md p-6 mb-8">
@@ -295,7 +291,109 @@ export default function CandidateDashboard() {
           </div>
         </div>
       )}
+      {/* Step 4. Emails candidate based on ranking and schedules and interview */}
+      {chatCompleted &&
+        profile &&
+        profile.ai_ranking >= 80 &&
+        !profile.interview_status && (
+          <div className="mt-4 bg-yellow-50 border border-yellow-200 rounded-md p-4">
+            <div className="flex items-start">
+              <div className="flex-shrink-0">
+                <FiAlertCircle className="h-5 w-5 text-yellow-400" />
+              </div>
+              <div className="ml-3">
+                <h3 className="text-sm font-medium text-yellow-800">
+                  You qualify for an interview!
+                </h3>
+                <div className="mt-2 text-sm text-yellow-700">
+                  <p>
+                    Based on your skills assessment, you've qualified for an
+                    interview. Click the button below to see available time
+                    slots.
+                  </p>
+                </div>
+                <div className="mt-4">
+                  <button
+                    onClick={async () => {
+                      try {
+                        // Create interview request
+                        const availableSlots = [
+                          {
+                            date: "2025-05-15",
+                            slots: ["10:00 AM", "1:00 PM", "3:30 PM"],
+                          },
+                          {
+                            date: "2025-05-16",
+                            slots: ["9:30 AM", "11:00 AM", "2:00 PM"],
+                          },
+                          {
+                            date: "2025-05-17",
+                            slots: ["10:30 AM", "1:30 PM", "4:00 PM"],
+                          },
+                        ];
 
+                        const { data: interviewRequest, error: requestError } =
+                          await supabase
+                            .from("interview_requests")
+                            .insert([
+                              {
+                                candidate_id: profile.id,
+                                status: "pending",
+                                available_slots: availableSlots,
+                                email_sent: true,
+                                created_at: new Date(),
+                              },
+                            ])
+                            .select()
+                            .single();
+
+                        if (requestError) throw requestError;
+
+                        // Update interview status
+                        const { data: updatedProfile, error: statusError } =
+                          await supabase
+                            .from("candidate_profiles")
+                            .update({
+                              interview_status: "invited",
+                            })
+                            .eq("id", profile.id)
+                            .select()
+                            .single();
+
+                        if (statusError) throw statusError;
+
+                        // Update local state without page refresh
+                        setProfile(updatedProfile);
+
+                        // Show success message
+                        alert(
+                          "Interview invitation created! Please select a time slot below.",
+                        );
+                      } catch (err) {
+                        console.error("Error setting up interview:", err);
+                        alert(
+                          "There was an error setting up your interview. Please try again.",
+                        );
+                      }
+                    }}
+                    className="inline-flex items-center px-4 py-2 border border-transparent rounded-md shadow-sm text-sm font-medium text-white bg-yellow-600 hover:bg-yellow-700 focus:outline-none focus:ring-2 focus:ring-offset-2 focus:ring-yellow-500"
+                  >
+                    View Available Times
+                  </button>
+                </div>
+              </div>
+            </div>
+          </div>
+        )}
+      {/* Interview Scheduler - Show this after the button is clicked */}
+      {profile && profile.interview_status === "invited" && (
+        <div className="mt-6 bg-white/10 rounded-lg shadow-md p-6">
+          <h2 className="text-xl text-white font-semibold mb-4">
+            Schedule Your Interview
+          </h2>
+          <InterviewScheduler candidateId={profile.id} />
+        </div>
+      )}{" "}
       {/* Profile Summary (visible after resume upload) */}
       {resumeUploaded && profile && (
         <div className="bg-white/10 rounded-lg shadow-md p-6">
