@@ -307,8 +307,8 @@ export default function CandidateDashboard() {
                 </h3>
                 <div className="mt-2 text-sm text-yellow-700">
                   <p>
-                    Based on your skills assessment, you've qualified for an
-                    interview. Click the button below to see available time
+                    Based on your skills assessment, you&apos;ve qualified for
+                    an interview. Click the button below to see available time
                     slots.
                   </p>
                 </div>
