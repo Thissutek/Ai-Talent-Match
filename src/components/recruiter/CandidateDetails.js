@@ -629,7 +629,7 @@ export default function CandidateDetails({ candidateId, recruiterId }) {
                                   <p
                                     className={`text-sm font-medium ${
                                       entry.type === "question"
-                                        ? "text-blue-800"
+                                        ? "text-green-800"
                                         : "text-gray-800"
                                     }`}
                                   >
@@ -645,11 +645,11 @@ export default function CandidateDetails({ candidateId, recruiterId }) {
                         </div>
 
                         <div className="mt-4">
-                          <h4 className="font-medium text-gray-900 mb-2">
+                          <h4 className="font-medium text-gray-200 mb-2">
                             Add Notes
                           </h4>
                           <textarea
-                            className="w-full p-3 border border-gray-300 rounded-md"
+                            className="w-full p-3 border border-gray-300 rounded-md text-gray-900 bg-white"
                             rows="4"
                             placeholder="Add your notes about this candidate's interview performance..."
                             onChange={(e) => {
@@ -657,7 +657,7 @@ export default function CandidateDetails({ candidateId, recruiterId }) {
                             }}
                           />
                           <button
-                            className="mt-2 px-4 py-2 bg-blue-600 text-white rounded-md hover:bg-blue-700"
+                            className="mt-2 px-4 py-2 bg-green-600 text-white rounded-md hover:bg-green-700"
                             onClick={() => {
                               // Save notes functionality
                             }}

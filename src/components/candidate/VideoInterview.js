@@ -314,7 +314,7 @@ export default function VideoInterview({ candidateId, interviewId }) {
   return (
     <div className="bg-white rounded-lg shadow-md p-6">
       <h2 className="text-xl font-semibold mb-4 flex items-center">
-        <FiVideo className="mr-2 text-blue-600" />
+        <FiVideo className="mr-2 text-green-600" />
         AI Video Interview
       </h2>
 
@@ -339,7 +339,7 @@ export default function VideoInterview({ candidateId, interviewId }) {
                 </p>
                 <button
                   onClick={() => setStatus("connecting")}
-                  className="inline-flex items-center px-4 py-2 bg-blue-600 border border-transparent rounded-md text-sm font-medium text-white hover:bg-blue-700 focus:outline-none focus:ring-2 focus:ring-offset-2 focus:ring-blue-500"
+                  className="inline-flex items-center px-4 py-2 bg-green-600 border border-transparent rounded-md text-sm font-medium text-white hover:bg-green-700 focus:outline-none focus:ring-2 focus:ring-offset-2 focus:ring-blue-500"
                 >
                   <FiVideo className="mr-2" /> Enable Camera & Microphone
                 </button>
