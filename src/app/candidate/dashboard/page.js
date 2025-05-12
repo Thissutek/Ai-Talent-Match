@@ -10,7 +10,9 @@ import {
   assessCandidateSkills,
   calculateCandidateRanking,
 } from "@/lib/ai/skillChecker";
-import { FiAlertCircle } from "react-icons/fi";
+import { FiAlertCircle, FiVideo, FiCheck } from "react-icons/fi";
+import VideoInterview from "@/components/candidate/VideoInterview";
+import Link from "next/link";
 
 export default function CandidateDashboard() {
   const router = useRouter();
@@ -164,17 +166,6 @@ export default function CandidateDashboard() {
     } catch (error) {
       console.error("Error updating assessment:", error);
       alert("Failed to save assessment data. Please try again.");
-    }
-  };
-
-  // Handle sign out
-  const handleSignOut = async () => {
-    try {
-      await signOut();
-      router.push("/login");
-    } catch (error) {
-      console.error("Error signing out:", error);
-      alert("Failed to sign out. Please try again.");
     }
   };
 
@@ -394,6 +385,47 @@ export default function CandidateDashboard() {
           <InterviewScheduler candidateId={profile.id} />
         </div>
       )}{" "}
+      {/* Video Interview*/}
+      {profile &&
+        profile.interview_status === "scheduled" &&
+        !profile.interview_completed_at && (
+          <div className="mt-6 bg-white rounded-lg shadow-md p-6">
+            <h2 className="text-xl font-semibold mb-4">Video Interview</h2>
+            <p className="text-gray-600 mb-4">
+              You&apos;ve scheduled your interview! You can now complete your AI
+              video interview.
+            </p>
+            <Link
+              href={`/candidate/interview/${profile.id}`}
+              className="inline-flex items-center px-4 py-2 border border-transparent rounded-md shadow-sm text-sm font-medium text-white bg-blue-600 hover:bg-blue-700 focus:outline-none focus:ring-2 focus:ring-offset-2 focus:ring-blue-500"
+            >
+              <FiVideo className="mr-2" />
+              Start Video Interview
+            </Link>
+          </div>
+        )}
+      {profile && profile.interview_completed_at && (
+        <div className="mt-6 bg-white rounded-lg shadow-md p-6">
+          <h2 className="text-xl font-semibold mb-4">Video Interview</h2>
+          <div className="p-4 bg-green-50 border border-green-200 rounded-md">
+            <div className="flex items-center">
+              <FiCheck className="h-5 w-5 text-green-400 mr-2" />
+              <div>
+                <h3 className="text-sm font-medium text-green-800">
+                  Interview Completed
+                </h3>
+                <p className="mt-1 text-xs text-green-700">
+                  Your video interview was completed on{" "}
+                  {new Date(
+                    profile.interview_completed_at,
+                  ).toLocaleDateString()}
+                  .
+                </p>
+              </div>
+            </div>
+          </div>
+        </div>
+      )}
       {/* Profile Summary (visible after resume upload) */}
       {resumeUploaded && profile && (
         <div className="bg-white/10 rounded-lg shadow-md p-6">

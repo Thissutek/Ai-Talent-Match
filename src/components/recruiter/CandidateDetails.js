@@ -31,6 +31,8 @@ export default function CandidateDetails({ candidateId, recruiterId }) {
   const [activeTab, setActiveTab] = useState("profile"); // 'profile', 'resume', 'assessment', 'chat'
   const [interviewData, setInterviewData] = useState(null);
   const [loadingInterview, setLoadingInterview] = useState(false);
+  const [interviewRecording, setInterviewRecording] = useState(null);
+  const [loadingRecording, setLoadingRecording] = useState(false);
 
   const fetchInterviewData = async () => {
     if (!candidate || !candidate.id) return;
@@ -60,9 +62,33 @@ export default function CandidateDetails({ candidateId, recruiterId }) {
     }
   };
 
+  const fetchInterviewRecording = async () => {
+    if (!candidate || !candidate.id) return;
+
+    try {
+      setLoadingRecording(true);
+
+      const { data, error } = await supabase
+        .from("interview_recordings")
+        .select("*")
+        .eq("candidate_id", candidate.id)
+        .order("created_at", { ascending: false })
+        .limit(1);
+
+      if (error) throw error;
+
+      setInterviewRecording(data.length > 0 ? data[0] : null);
+      setLoadingRecording(false);
+    } catch (err) {
+      console.error("Error fetching interview recording:", err);
+      setLoadingRecording(false);
+    }
+  };
+
   useEffect(() => {
     if (activeTab === "interview" && candidate) {
       fetchInterviewData();
+      fetchInterviewRecording();
     }
   }, [activeTab, candidate]);
 
@@ -569,6 +595,86 @@ export default function CandidateDetails({ candidateId, recruiterId }) {
                   </div>
                 )}
 
+                {candidate.interview_status === "completed" && (
+                  <div className="mt-6">
+                    <h3 className="text-lg font-medium mb-3">
+                      Video Interview Recording
+                    </h3>
+
+                    {loadingRecording ? (
+                      <div className="flex justify-center py-4">
+                        <div className="animate-spin rounded-full h-8 w-8 border-t-2 border-b-2 border-blue-600"></div>
+                      </div>
+                    ) : interviewRecording ? (
+                      <div>
+                        <div className="aspect-video bg-black rounded-lg overflow-hidden mb-4">
+                          <video
+                            controls
+                            className="w-full h-full"
+                            src={interviewRecording.recording_url}
+                          />
+                        </div>
+
+                        <div className="bg-white border border-gray-200 rounded-md p-4">
+                          <h4 className="font-medium text-gray-900 mb-2">
+                            Interview Transcript
+                          </h4>
+                          <div className="max-h-96 overflow-y-auto">
+                            {interviewRecording.transcript.map(
+                              (entry, index) => (
+                                <div
+                                  key={index}
+                                  className={`mb-4 ${entry.type === "question" ? "pl-0" : "pl-6"}`}
+                                >
+                                  <p
+                                    className={`text-sm font-medium ${
+                                      entry.type === "question"
+                                        ? "text-blue-800"
+                                        : "text-gray-800"
+                                    }`}
+                                  >
+                                    {entry.type === "question"
+                                      ? "AI Interviewer:"
+                                      : "Candidate:"}
+                                  </p>
+                                  <p className="text-sm mt-1">{entry.text}</p>
+                                </div>
+                              ),
+                            )}{" "}
+                          </div>
+                        </div>
+
+                        <div className="mt-4">
+                          <h4 className="font-medium text-gray-900 mb-2">
+                            Add Notes
+                          </h4>
+                          <textarea
+                            className="w-full p-3 border border-gray-300 rounded-md"
+                            rows="4"
+                            placeholder="Add your notes about this candidate's interview performance..."
+                            onChange={(e) => {
+                              // Save notes functionality would go here
+                            }}
+                          />
+                          <button
+                            className="mt-2 px-4 py-2 bg-blue-600 text-white rounded-md hover:bg-blue-700"
+                            onClick={() => {
+                              // Save notes functionality
+                            }}
+                          >
+                            Save Notes
+                          </button>
+                        </div>
+                      </div>
+                    ) : (
+                      <div className="bg-gray-50 border border-gray-200 rounded-md p-4 text-center">
+                        <p className="text-gray-600">
+                          No interview recording found for this candidate.
+                        </p>
+                      </div>
+                    )}
+                  </div>
+                )}
                 {/* Available time slots section (only for invited candidates) */}
                 {candidate.interview_status === "invited" && interviewData && (
                   <div className="mt-6">
